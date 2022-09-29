@@ -45,13 +45,38 @@ function App() {
     setPickedCategory(category)
     setPickedWord(word)
     setLetters(wordLetters)
+    console.log(letters)
     setGameStage(stages[1].name)
   }
   
   const verifyLetter = (letter) => {
-    console.log(letter)
+    const normalizedLetter = letter.toLowerCase()
+    console.log(normalizedLetter)
+    const isAlreadyGuessedLetter = guessedLetters.includes(normalizedLetter)
+    const isAlreadyWrongLetter = wrongLetters.includes(normalizedLetter)
+    const isANewGuessedLetter = letters.includes(normalizedLetter)
+
+    if(isAlreadyGuessedLetter || isAlreadyWrongLetter) {
+      return
+    }
+
+    if(isANewGuessedLetter) {
+      setGuessedLetters((prevGuessedLetters) => [
+        ...prevGuessedLetters, 
+        normalizedLetter
+      ])
+    } else {      
+      setWrongLetters((prevWrongLetters) => [
+        ...prevWrongLetters, 
+        normalizedLetter
+      ])
+    }
     // setGameStage(stages[2].name)
   }
+
+  
+  console.log("guessedLetter:", guessedLetters)
+  console.log("wrongLetter:",wrongLetters)
 
   const retry = () => {
     setGameStage(stages[0].name)

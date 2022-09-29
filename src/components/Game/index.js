@@ -14,6 +14,8 @@ const Game = ({
   const [letter, setLetter] = useState("")
   const letterInputRef = useRef(null)
 
+  console.log(pickedWord)
+
   const handleSubmit = (e) => {
     e.preventDefault()
     verifyLetter(letter)
@@ -24,7 +26,7 @@ const Game = ({
   return (
     <div className={style.game}>
       <p className={style.points}>
-        <span>Pontuaçõa: {score}</span>
+        <span>Pontuação: {score}</span>
       </p>
       <h1>Adivinhe a palavra:</h1>
       <h3 className={style.tip}>
@@ -39,7 +41,7 @@ const Game = ({
       <div className={style.letterContainer}>
         <p>Tente adivinhar uam letra da palavra:</p>
         <form onSubmit={handleSubmit}>
-          <input type="text" name="letter" maxLength={1} required value={letter} onChange={e => setLetter(e.target.value)} ref={letterInputRef}/>
+          <input type="text" name="letter" maxLength={1} required value={letter} onChange={(e) => setLetter(e.target.value)} ref={letterInputRef}/>
           <button onClick={verifyLetter}>Jogar</button>
         </form>
       </div>
