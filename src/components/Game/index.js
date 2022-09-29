@@ -39,14 +39,14 @@ const Game = ({
         ) )}       
       </div>
       <div className={style.letterContainer}>
-        <p>Tente adivinhar uam letra da palavra:</p>
+        <p>Tente adivinhar uma letra da palavra:</p>
         <form onSubmit={handleSubmit}>
           <input type="text" name="letter" maxLength={1} required value={letter} onChange={(e) => setLetter(e.target.value)} ref={letterInputRef}/>
           <button onClick={verifyLetter}>Jogar</button>
         </form>
       </div>
       <div className={style.wrongLettersContaier}>
-        <p>Letras já utilizadas:</p>
+        <p>Letras já utilizadas: {}</p>
         {wrongLetters.map( (letter, i) => <span key={i}>{letter}, </span>)}
       </div>
     </div>
