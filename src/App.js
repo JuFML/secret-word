@@ -1,6 +1,6 @@
 import './App.css';
 
-import {  useState } from 'react';
+import {  useState, useEffect } from 'react';
 
 import { wordsList } from './data/words'
 
@@ -70,15 +70,31 @@ function App() {
         ...prevWrongLetters, 
         normalizedLetter
       ])
+      setGuesses(prevGuesses => --prevGuesses)      
     }
-    // setGameStage(stages[2].name)
   }
+
+  const clearLetterStates = () => {
+    setGuessedLetters([])
+    setWrongLetters([])
+  }
+
+  useEffect(() => {
+    clearLetterStates()
+    if(guesses <= 0 ) setGameStage(stages[2].name)
+
+  }, [guesses])
+  
+  
+  console.log("guesse:", guesses)
 
   
   console.log("guessedLetter:", guessedLetters)
   console.log("wrongLetter:",wrongLetters)
 
   const retry = () => {
+    setScore(0)
+    setGuesses(3)
     setGameStage(stages[0].name)
   }
 
