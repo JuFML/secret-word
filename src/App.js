@@ -1,6 +1,6 @@
 import './App.css';
 
-import {  useState, useEffect } from 'react';
+import {  useState, useEffect, useCallback } from 'react';
 
 import { wordsList } from './data/words'
 
@@ -10,11 +10,11 @@ import StartScreen from './components/StartScreen'
 
 function App() {
 
-  const stages = [
+  const [stages] = useState([
     {id: 1, name: "start"},
     {id: 2, name: "game"},
     {id: 3, name: "end"}
-  ]
+  ])
   
   const [gameStage, setGameStage] = useState(stages[0].name)
   const [words] = useState(wordsList)
@@ -28,15 +28,15 @@ function App() {
   const [guesses, setGuesses] = useState(3)
   const [score, setScore] = useState(0)
 
-  const pickWordAndPickCategory = () => {
+  const pickWordAndPickCategory = useCallback(() => {
     const categories = Object.keys(words)
     const category = categories[Math.floor(Math.random() * categories.length)]
     
     const word = words[category][Math.floor(Math.random() * words[category].length)]
     return [category, word]
-  }
+  }, [words])
 
-  const startGame = () => {
+  const startGame = useCallback(() => {
     const [category, word] = pickWordAndPickCategory()
 
     let wordLetters = word.split("")
@@ -45,13 +45,13 @@ function App() {
     setPickedCategory(category)
     setPickedWord(word)
     setLetters(wordLetters)
-    console.log(letters)
     setGameStage(stages[1].name)
-  }
-  
+    clearLetterStates()
+  }, [pickWordAndPickCategory, stages])
+
   const verifyLetter = (letter) => {
     const normalizedLetter = letter.toLowerCase()
-    console.log(normalizedLetter)
+    
     const isAlreadyGuessedLetter = guessedLetters.includes(normalizedLetter)
     const isAlreadyWrongLetter = wrongLetters.includes(normalizedLetter)
     const isANewGuessedLetter = letters.includes(normalizedLetter)
@@ -73,24 +73,27 @@ function App() {
       setGuesses(prevGuesses => --prevGuesses)      
     }
   }
-
+  
   const clearLetterStates = () => {
     setGuessedLetters([])
     setWrongLetters([])
   }
 
   useEffect(() => {
-    clearLetterStates()
-    if(guesses <= 0 ) setGameStage(stages[2].name)
+    if(guesses <= 0 ) {
+      clearLetterStates()
+      setGameStage(stages[2].name)
+    }
 
-  }, [guesses])
-  
-  
-  console.log("guesse:", guesses)
+  }, [guesses, stages]) 
 
-  
-  console.log("guessedLetter:", guessedLetters)
-  console.log("wrongLetter:",wrongLetters)
+  useEffect(() => {
+    const uniqueLetters = [...new Set(letters)]
+    if(uniqueLetters.length === guessedLetters.length && gameStage === stages[1].name) {
+      setScore(prevScore => prevScore += 100)
+      startGame()
+    }
+  }, [guessedLetters, gameStage, letters, stages, startGame])
 
   const retry = () => {
     setScore(0)

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import style from './style.module.css'
 
 const Game = ({
@@ -14,7 +14,9 @@ const Game = ({
   const [letter, setLetter] = useState("")
   const letterInputRef = useRef(null)
 
-  console.log(pickedWord)
+  useEffect(() => {
+    letterInputRef.current.focus()
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -42,12 +44,12 @@ const Game = ({
         <p>Tente adivinhar uma letra da palavra:</p>
         <form onSubmit={handleSubmit}>
           <input type="text" name="letter" maxLength={1} required value={letter} onChange={(e) => setLetter(e.target.value)} ref={letterInputRef}/>
-          <button onClick={verifyLetter}>Jogar</button>
+          <button >Jogar</button>
         </form>
       </div>
       <div className={style.wrongLettersContaier}>
-        <p>Letras já utilizadas: {}</p>
-        {wrongLetters.map( (letter, i) => <span key={i}>{letter}, </span>)}
+        <p>Letras já utilizadas:</p>
+        {wrongLetters.map( (letter, i) => <span key={i}>{letter} - </span>)}
       </div>
     </div>
   )
